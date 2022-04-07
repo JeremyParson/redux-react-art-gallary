@@ -1,20 +1,29 @@
 import './App.css';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { useEffect } from 'react'
+import { incrementArtId, decrementArtId, fetchData, setArtId } from './features/dataSlice' 
 
 function App() {
   // your logic goes here!
+  const dispatch = useDispatch()
+  const artId = useSelector(state => state.data.artId)
+  const artData = useSelector(state => state.data.artData)
+
+  useEffect(() => {
+    dispatch(fetchData())
+  }, [artId])
 
   return (
     <div className="App">
       <div>
-        <button onClick={() => {}}>Trigger Thunk</button>
+        <button onClick={() => {dispatch(fetchData())}}>Trigger Thunk</button>
         <button onClick={() => {}}>Clear</button>
-        <button onClick={() => {}}>Next</button>
-        <button onClick={() => {}}>Back</button>
+        <button onClick={() => {dispatch(incrementArtId())}}>Next</button>
+        <button onClick={() => {dispatch(decrementArtId())}}>Back</button>
       </div>
-      <input onChange={(e) => { }} />
+      <input onChange={(e) => {dispatch(setArtId(e.target.value))}} value={artId}/>
       <div>
-        {/* Once you have plugged everything in, render the image here! */}
+        {artData['primaryImageSmall'] ? <img src={artData['primaryImageSmall']} /> : <p>No Image</p>}
       </div>
     </div>
   );
